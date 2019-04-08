@@ -1,11 +1,12 @@
 {
-  "name": "simple app",
+  "name": "simple_app",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "build": "electron-build-env neon build make-an-array",
-    "start": "electron ."
+    "build": "electron-build-env neon build hello",
+    "start": "electron .",
+    "package": "electron-packager . sample --platform=win32 --arch=x64"
   },
   "repository": "https://github.com/various3211workd/electron_for_Rust",
   "keywords": [
