@@ -13,6 +13,7 @@
 
     <script>
       // You can also require other files to run in this process
+      document.write("<h1>" + require('hello').hello() + "</h1>");
       require('./renderer.js')
     </script>
   </body>
