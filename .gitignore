@@ -1,2 +1,14 @@
-/node_modules/*
-!/node_modules/hello
+# dependencies
+node_modules
+
+# logs
+npm-debug.log
+
+# Nuxt build
+.nuxt
+
+# Nuxt generate
+dist
+
+# Mac OS
+.DS_Store
