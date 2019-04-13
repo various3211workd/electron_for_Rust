@@ -4,7 +4,7 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "build": "electron-build-env neon build hello",
+    "build": "electron-build-env neon build rust_module",
     "start": "electron .",
     "build-windows": "electron-packager . sample --platform=win32 --arch=x64",
     "build-macOS": "electron-packager . sample --platform=darwin --arch=x64"
