@@ -1,6 +1,6 @@
 # dependencies
 /node_modules/*
-!/node_modules/hello
+!/node_modules/rust_module
 
 
 # logs
