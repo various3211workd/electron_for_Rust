@@ -1,55 +1,52 @@
-/*
-**  Nuxt
-*/
-const http = require('http')
-const { Nuxt, Builder } = require('nuxt')
-let config = require('./nuxt.config.js')
-config.rootDir = __dirname // for electron-builder
-// Init Nuxt.js
-const nuxt = new Nuxt(config)
-const builder = new Builder(nuxt)
-const server = http.createServer(nuxt.render)
-// Build only in dev mode
-if (config.dev) {
-	builder.build().catch(err => {
-		console.error(err) // eslint-disable-line no-console
-		process.exit(1)
-	})
-}
-// Listen the server
-server.listen()
-const _NUXT_URL_ = `http://localhost:${server.address().port}`
-console.log(`Nuxt working on ${_NUXT_URL_}`)
+// Modules to control application life and create native browser window
+const {app, BrowserWindow} = require('electron')
 
-/*
-** Electron
-*/
-let win = null // Current window
-const electron = require('electron')
-const path = require('path')
-const app = electron.app
-const newWin = () => {
-	win = new electron.BrowserWindow({
-		icon: path.join(__dirname, 'static/icon.png')
-	})
-	win.maximize()
-	win.on('closed', () => win = null)
-	if (config.dev) {
-		// Install vue dev tool and open chrome dev tools
-		const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer')
-		installExtension(VUEJS_DEVTOOLS.id).then(name => {
-			console.log(`Added Extension:  ${name}`)
-			win.webContents.openDevTools()
-		}).catch(err => console.log('An error occurred: ', err))
-		// Wait for nuxt to build
-		const pollServer = () => {
-			http.get(_NUXT_URL_, (res) => {
-				if (res.statusCode === 200) { win.loadURL(_NUXT_URL_) } else { setTimeout(pollServer, 300) }
-			}).on('error', pollServer)
-		}
-		pollServer()
-	} else { return win.loadURL(_NUXT_URL_) }
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let mainWindow
+
+function createWindow () {
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
+
+  // and load the index.html of the app.
+  mainWindow.loadFile('index.html')
+
+  // Open the DevTools.
+  // mainWindow.webContents.openDevTools()
+
+  // Emitted when the window is closed.
+  mainWindow.on('closed', function () {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null
+  })
 }
-app.on('ready', newWin)
-app.on('window-all-closed', () => app.quit())
-app.on('activate', () => win === null && newWin())
+
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', createWindow)
+
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+  // On macOS it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') app.quit()
+})
+
+app.on('activate', function () {
+  // On macOS it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) createWindow()
+})
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.
